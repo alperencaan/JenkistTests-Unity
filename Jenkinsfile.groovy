@@ -21,6 +21,8 @@ pipeline {
             steps {
                 echo "BUILD_WINDOWS = ${params.BUILD_WINDOWS}"
                 echo "DEPLOY_WINDOWS = ${params.DEPLOY_WINDOWS}"
+                echo "UNITY_PATH = ${env.UNITY_PATH}"
+                echo "PROJECT_PATH = ${env.PROJECT_PATH}"
             }
         }
 
@@ -29,9 +31,14 @@ pipeline {
                 expression { return params.BUILD_WINDOWS }
             }
             steps {
-                bat """
-                "${env.UNITY_PATH}" -quit -batchmode -projectPath "${env.PROJECT_PATH}" -executeMethod BuildScript.BuildWindows -logFile -
-                """
+                dir("${env.PROJECT_PATH}") {
+                    bat """
+                    "${env.UNITY_PATH}" -quit -batchmode ^
+                    -projectPath "${env.PROJECT_PATH}" ^
+                    -executeMethod BuildScript.BuildWindows ^
+                    -logFile -
+                    """
+                }
             }
         }
 
