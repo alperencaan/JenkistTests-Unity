@@ -7,7 +7,8 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_PATH = "A:\\Unity6\\JenkistTests-Unity"
+        PROJECT_PATH = "${CUSTOM_WORKSPACE}\\${PROJECT_NAME}"
+        UNITY_PATH = "${UNITY_INSTALLATION}\\Unity.exe"
     }
 
     stages {
@@ -17,6 +18,7 @@ pipeline {
                 echo "DEPLOY_WINDOWS = ${env.DEPLOY_WINDOWS}"
             }
         }
+
         stage('Build Windows') {
             when {
                 expression { env.BUILD_WINDOWS == 'true' }
@@ -24,19 +26,19 @@ pipeline {
             steps {
                 ws("${env.PROJECT_PATH}") {
                     bat """
-                    "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.62f1\\Editor\\Unity.exe" -quit -batchmode -projectPath . -executeMethod BuildScript.BuildWindows -logFile -
+                    "${env.UNITY_PATH}" -quit -batchmode -projectPath . -executeMethod BuildScript.BuildWindows -logFile -
                     """
                 }
             }
         }
+
         stage('Deploy Windows') {
             when {
                 expression { env.DEPLOY_WINDOWS == 'true' }
             }
             steps {
-                echo 'Deploy Windows stage is running...'
+                echo '✅ Deploy Windows stage is running...'
             }
         }
     }
 }
-
