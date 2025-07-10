@@ -6,12 +6,10 @@ def UNITY_INSTALLATION = "C:\\Program Files\\Unity\\Hub\\Editor\\${UNITY_VERSION
 pipeline {
     agent any
 
-    options {
-        customWorkspace "${CUSTOM_WORKSPACE}\\${PROJECT_NAME}"
-    }
-
     environment {
         PROJECT_PATH = "${CUSTOM_WORKSPACE}\\${PROJECT_NAME}"
+        BUILD_WINDOWS = 'true'       // Buraya true veya false yazabilirsin
+        DEPLOY_WINDOWS = 'true'      // Buraya true veya false yazabilirsin
     }
 
     stages {
@@ -20,11 +18,13 @@ pipeline {
                 expression { env.BUILD_WINDOWS == 'true' }
             }
             steps {
-                script {
-                    withEnv(["UNITY_PATH=${UNITY_INSTALLATION}"]) {
-                        bat '''
-                        "%UNITY_PATH%\\Unity.exe" -quit -batchmode -projectPath %PROJECT_PATH% -executeMethod BuildScript.BuildWindows -logFile -
-                        '''
+                ws("${CUSTOM_WORKSPACE}\\${PROJECT_NAME}") {
+                    script {
+                        withEnv(["UNITY_PATH=${UNITY_INSTALLATION}"]) {
+                            bat '''
+                            "%UNITY_PATH%\\Unity.exe" -quit -batchmode -projectPath %PROJECT_PATH% -executeMethod BuildScript.BuildWindows -logFile -
+                            '''
+                        }
                     }
                 }
             }
