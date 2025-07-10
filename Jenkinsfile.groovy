@@ -6,22 +6,29 @@ def UNITY_INSTALLATION = "C:\\Program Files\\Unity\\Hub\\Editor\\${UNITY_VERSION
 pipeline {
     agent any
 
+    environment {
+        PROJECT_PATH = "A:\\Unity6\\JenkistTests-Unity"
+    }
+
     stages {
+        stage('Check Env Variables') {
+            steps {
+                echo "BUILD_WINDOWS = ${env.BUILD_WINDOWS}"
+                echo "DEPLOY_WINDOWS = ${env.DEPLOY_WINDOWS}"
+            }
+        }
         stage('Build Windows') {
             when {
                 expression { env.BUILD_WINDOWS == 'true' }
             }
             steps {
-                ws("A:\\Unity6\\JenkistTests-Unity") {  // Burada çalışma dizinini değiştiriyoruz
-                    script {
-                        bat """
-                        "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.62f1\\Editor\\Unity.exe" -quit -batchmode -projectPath . -executeMethod BuildScript.BuildWindows -logFile -
-                        """
-                    }
+                ws("${env.PROJECT_PATH}") {
+                    bat """
+                    "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.62f1\\Editor\\Unity.exe" -quit -batchmode -projectPath . -executeMethod BuildScript.BuildWindows -logFile -
+                    """
                 }
             }
         }
-
         stage('Deploy Windows') {
             when {
                 expression { env.DEPLOY_WINDOWS == 'true' }
@@ -32,3 +39,4 @@ pipeline {
         }
     }
 }
+
