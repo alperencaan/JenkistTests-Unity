@@ -6,10 +6,6 @@ def UNITY_INSTALLATION = "C:\\Program Files\\Unity\\Hub\\Editor\\${UNITY_VERSION
 pipeline {
     agent any
 
-    environment {
-        PROJECT_PATH = "${CUSTOM_WORKSPACE}\\${PROJECT_NAME}"
-    }
-
     stages {
         stage('Build Windows') {
             when {
@@ -17,11 +13,9 @@ pipeline {
             }
             steps {
                 script {
-                    withEnv(["UNITY_PATH=${UNITY_INSTALLATION}"]) {
-                        bat """
-                        "%UNITY_PATH%\\Unity.exe" -quit -batchmode -projectPath %PROJECT_PATH% -executeMethod BuildScript.BuildWindows -logFile -
-                        """
-                    }
+                    bat """
+                    \"${UNITY_INSTALLATION}\\Unity.exe\" -quit -batchmode -projectPath \"${CUSTOM_WORKSPACE}\\${PROJECT_NAME}\" -executeMethod BuildScript.BuildWindows -logFile -
+                    """
                 }
             }
         }
