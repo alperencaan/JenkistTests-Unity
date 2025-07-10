@@ -26,7 +26,7 @@ pipeline {
             }
         }
 
-        stage('Build Windows') {
+        stage('Build & Test') {
             when {
                 expression { return params.BUILD_WINDOWS }
             }
@@ -36,6 +36,12 @@ pipeline {
                     "${env.UNITY_PATH}" -quit -batchmode ^
                     -projectPath "${env.PROJECT_PATH}" ^
                     -executeMethod BuildScript.BuildWindows ^
+                    -logFile -
+
+                    "${env.UNITY_PATH}" -runTests -batchmode ^
+                    -projectPath "${env.PROJECT_PATH}" ^
+                    -testResults "C:\\temp\\results.xml" ^
+                    -testPlatform editmode ^
                     -logFile -
                     """
                 }
