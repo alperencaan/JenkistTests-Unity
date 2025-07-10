@@ -3,6 +3,11 @@ def CUSTOM_WORKSPACE = "A:\\Unity6"
 def UNITY_VERSION = "2022.3.62f1"
 def UNITY_INSTALLATION = "C:\\Program Files\\Unity\\Hub\\Editor\\${UNITY_VERSION}\\Editor"
 
+def PROJECT_NAME = "JenkistTests-Unity"
+def CUSTOM_WORKSPACE = "A:\\Unity6"
+def UNITY_VERSION = "2022.3.62f1"
+def UNITY_INSTALLATION = "C:\\Program Files\\Unity\\Hub\\Editor\\${UNITY_VERSION}\\Editor"
+
 pipeline {
     agent any
 
@@ -31,15 +36,14 @@ pipeline {
                 expression { return params.BUILD_WINDOWS }
             }
             steps {
-                dir("${env.PROJECT_PATH}") {
-                    bat """
-                    "${env.UNITY_PATH}" -runTests -batchmode ^
-                    -projectPath . ^
-                    -testResults "C:\\temp\\results.xml" ^
-                    -testPlatform editmode ^
-                    -logFile -
-                    """
-                }
+                // ❗ dir() kaldırıldı çünkü -projectPath zaten tüm path'i alıyor
+                bat """
+                "${env.UNITY_PATH}" -runTests -batchmode ^
+                -projectPath "${env.PROJECT_PATH}" ^
+                -testResults "C:\\temp\\results.xml" ^
+                -testPlatform editmode ^
+                -logFile -
+                """
             }
         }
 
