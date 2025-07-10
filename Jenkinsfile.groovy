@@ -11,30 +11,33 @@ pipeline {
         UNITY_PATH = "${UNITY_INSTALLATION}\\Unity.exe"
     }
 
+    parameters {
+        booleanParam(name: 'BUILD_WINDOWS', defaultValue: true, description: 'Build Windows?')
+        booleanParam(name: 'DEPLOY_WINDOWS', defaultValue: false, description: 'Deploy Windows?')
+    }
+
     stages {
         stage('Check Env Variables') {
             steps {
-                echo "BUILD_WINDOWS = ${env.BUILD_WINDOWS}"
-                echo "DEPLOY_WINDOWS = ${env.DEPLOY_WINDOWS}"
+                echo "BUILD_WINDOWS = ${params.BUILD_WINDOWS}"
+                echo "DEPLOY_WINDOWS = ${params.DEPLOY_WINDOWS}"
             }
         }
 
         stage('Build Windows') {
             when {
-                expression { env.BUILD_WINDOWS == 'true' }
+                expression { return params.BUILD_WINDOWS }
             }
             steps {
-                ws("${env.PROJECT_PATH}") {
-                    bat """
-                    "${env.UNITY_PATH}" -quit -batchmode -projectPath . -executeMethod BuildScript.BuildWindows -logFile -
-                    """
-                }
+                bat """
+                "${env.UNITY_PATH}" -quit -batchmode -projectPath "${env.PROJECT_PATH}" -executeMethod BuildScript.BuildWindows -logFile -
+                """
             }
         }
 
         stage('Deploy Windows') {
             when {
-                expression { env.DEPLOY_WINDOWS == 'true' }
+                expression { return params.DEPLOY_WINDOWS }
             }
             steps {
                 echo '✅ Deploy Windows stage is running...'
