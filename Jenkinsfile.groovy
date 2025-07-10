@@ -33,13 +33,8 @@ pipeline {
             steps {
                 dir("${env.PROJECT_PATH}") {
                     bat """
-                    "${env.UNITY_PATH}" -quit -batchmode ^
-                    -projectPath "${env.PROJECT_PATH}" ^
-                    -executeMethod BuildScript.BuildWindows ^
-                    -logFile -
-
                     "${env.UNITY_PATH}" -runTests -batchmode ^
-                    -projectPath "${env.PROJECT_PATH}" ^
+                    -projectPath . ^
                     -testResults "C:\\temp\\results.xml" ^
                     -testPlatform editmode ^
                     -logFile -
