@@ -7,7 +7,6 @@ pipeline {
     agent any
 
     environment {
-        // Proje klasörü tam yol olarak iç içe klasörleri verdik
         PROJECT_PATH = "${CUSTOM_WORKSPACE}\\${PROJECT_NAME}\\${PROJECT_NAME}"
         UNITY_PATH = "${UNITY_INSTALLATION}\\Unity.exe"
     }
@@ -33,8 +32,9 @@ pipeline {
             }
             steps {
                 bat """
+                cd /d "${env.PROJECT_PATH}" && ^
                 "${env.UNITY_PATH}" -runTests -batchmode ^
-                -projectPath "${env.PROJECT_PATH}" ^
+                -projectPath . ^
                 -testResults "C:\\temp\\results.xml" ^
                 -testPlatform editmode ^
                 -logFile -
