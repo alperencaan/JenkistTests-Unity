@@ -7,7 +7,8 @@ pipeline {
     agent any
 
     environment {
-        UNITY_PATH = "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.62f1\\Editor\\Unity.exe"
+        PROJECT_PATH = "${CUSTOM_WORKSPACE}\\${PROJECT_NAME}\\JenkistTests-Unity"
+        UNITY_PATH = "${UNITY_INSTALLATION}\\Unity.exe"
     }
 
     parameters {
@@ -21,7 +22,7 @@ pipeline {
                 echo "BUILD_WINDOWS = ${params.BUILD_WINDOWS}"
                 echo "DEPLOY_WINDOWS = ${params.DEPLOY_WINDOWS}"
                 echo "UNITY_PATH = ${env.UNITY_PATH}"
-                echo "PROJECT_PATH = A:\\Unity6\\JenkinsTests-Unity\\JenkistTests-Unity"
+                echo "PROJECT_PATH = ${env.PROJECT_PATH}"
             }
         }
 
@@ -31,12 +32,8 @@ pipeline {
             }
             steps {
                 bat """
-                cd /d "A:\\Unity6\\JenkinsTests-Unity\\JenkistTests-Unity" &&
-                "${env.UNITY_PATH}" -runTests -batchmode ^
-                -projectPath . ^
-                -testResults "C:\\temp\\results.xml" ^
-                -testPlatform editmode ^
-                -logFile -
+                    cd /d "${env.PROJECT_PATH}"
+                    "${env.UNITY_PATH}" -runTests -batchmode -projectPath . -testResults "C:\\temp\\results.xml" -testPlatform editmode -logFile -
                 """
             }
         }
