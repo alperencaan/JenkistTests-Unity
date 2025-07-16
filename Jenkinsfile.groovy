@@ -9,6 +9,8 @@ pipeline {
     environment {
         PROJECT_PATH = "${CUSTOM_WORKSPACE}\\${PROJECT_NAME}\\JenkistTests-Unity"
         UNITY_PATH = "${UNITY_INSTALLATION}\\Unity.exe"
+        EDITMODE_RESULT_PATH = "C:\\temp\\editmode-results.xml"
+        PLAYMODE_RESULT_PATH = "C:\\temp\\playmode-results.xml"
     }
 
     parameters {
@@ -33,7 +35,7 @@ pipeline {
             steps {
                 bat """
                     cd /d "${env.PROJECT_PATH}"
-                    "${env.UNITY_PATH}" -runTests -batchmode -projectPath . -testResults "C:\\temp\\editmode-results.xml" -testPlatform editmode -logFile -
+                    "${env.UNITY_PATH}" -runTests -batchmode -projectPath . -testResults "${env.EDITMODE_RESULT_PATH}" -testPlatform editmode -logFile -
                 """
             }
         }
@@ -45,7 +47,7 @@ pipeline {
             steps {
                 bat """
                     cd /d "${env.PROJECT_PATH}"
-                    "${env.UNITY_PATH}" -runTests -batchmode -projectPath . -testResults "C:\\temp\\playmode-results.xml" -testPlatform playmode -logFile -
+                    "${env.UNITY_PATH}" -runTests -batchmode -projectPath . -testResults "${env.PLAYMODE_RESULT_PATH}" -testPlatform playmode -logFile -
                 """
             }
         }
@@ -56,14 +58,15 @@ pipeline {
             }
             steps {
                 echo '✅ Deploy Windows stage is running...'
+                // Buraya deploy komutlarını ekleyebilirsin
             }
         }
     }
 
     post {
         always {
-            junit 'C:\\temp\\editmode-results.xml'
-            junit 'C:\\temp\\playmode-results.xml'
+            junit "${env.EDITMODE_RESULT_PATH}"
+            junit "${env.PLAYMODE_RESULT_PATH}"
         }
     }
 }
