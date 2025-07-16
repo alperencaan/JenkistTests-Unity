@@ -1,20 +1,15 @@
 using NUnit.Framework;
-using Logic.EditModeTest;
+using Logic;
 
-public class PlayTestAdapter
+namespace EditModeTests
 {
-    private PlayTestLogic logic;
-
-    [SetUp]
-    public void Setup()
+    public class PlayTestAdapter
     {
-        logic = new PlayTestLogic();
-    }
-
-    [Test]
-    public void EditMode_Addition_Works()
-    {
-        int result = logic.Add(2, 3);
-        Assert.AreEqual(5, result);
+        [Test]
+        public void AddTest_AsAdapter()
+        {
+            var logic = new PlayTestLogic();
+            Assert.AreEqual(5, logic.Add(2, 3));
+        }
     }
 }
