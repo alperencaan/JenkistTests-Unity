@@ -104,7 +104,6 @@ post {
 ---
 
 ## Katkı ve Geliştirme
-<<<<<<< HEAD
 - Her yeni script için uygun testler yazılması önerilir.
 =======
 - Her yeni script için uygun testler yazılması önerilir.                  
@@ -112,11 +111,4 @@ post {
 - Kodunuzu testlerle güvence altına alın.
 - Proje yapısını ve klasör düzenini koruyun.
 
----
 
-## Lisans
-<<<<<<< HEAD
-Bu proje eğitim ve örnek amaçlıdır. 
-=======
-Bu proje eğitim ve örnek amaçlıdır.
->>>>>>> 516c3bcc74873059ef1ddd6610e692a5c13805a9
