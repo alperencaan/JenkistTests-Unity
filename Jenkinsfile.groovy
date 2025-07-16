@@ -26,14 +26,26 @@ pipeline {
             }
         }
 
-        stage('Build & Test') {
+        stage('Run EditMode Tests') {
             when {
                 expression { return params.BUILD_WINDOWS }
             }
             steps {
                 bat """
                     cd /d "${env.PROJECT_PATH}"
-                    "${env.UNITY_PATH}" -runTests -batchmode -projectPath . -testResults "C:\\temp\\results.xml" -testPlatform editmode -logFile -
+                    "${env.UNITY_PATH}" -runTests -batchmode -projectPath . -testResults "C:\\temp\\editmode-results.xml" -testPlatform editmode -logFile -
+                """
+            }
+        }
+
+        stage('Run PlayMode Tests') {
+            when {
+                expression { return params.BUILD_WINDOWS }
+            }
+            steps {
+                bat """
+                    cd /d "${env.PROJECT_PATH}"
+                    "${env.UNITY_PATH}" -runTests -batchmode -projectPath . -testResults "C:\\temp\\playmode-results.xml" -testPlatform playmode -logFile -
                 """
             }
         }
@@ -45,6 +57,13 @@ pipeline {
             steps {
                 echo '✅ Deploy Windows stage is running...'
             }
+        }
+    }
+
+    post {
+        always {
+            junit 'C:\\temp\\editmode-results.xml'
+            junit 'C:\\temp\\playmode-results.xml'
         }
     }
 }
