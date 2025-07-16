@@ -36,6 +36,7 @@ pipeline {
                 bat """
                     cd /d "${env.PROJECT_PATH}"
                     "${env.UNITY_PATH}" -runTests -batchmode -projectPath . -testResults "${env.EDITMODE_RESULT_PATH}" -testPlatform editmode -logFile -
+                    dir C:\\temp
                 """
             }
         }
@@ -48,6 +49,7 @@ pipeline {
                 bat """
                     cd /d "${env.PROJECT_PATH}"
                     "${env.UNITY_PATH}" -runTests -batchmode -projectPath . -testResults "${env.PLAYMODE_RESULT_PATH}" -testPlatform playmode -logFile -
+                    dir C:\\temp
                 """
             }
         }
@@ -58,15 +60,15 @@ pipeline {
             }
             steps {
                 echo '✅ Deploy Windows stage is running...'
-                // Buraya deploy komutlarını ekleyebilirsin
+                // Deploy komutlarını buraya ekle
             }
         }
     }
 
     post {
         always {
-            junit "${env.EDITMODE_RESULT_PATH}"
-            junit "${env.PLAYMODE_RESULT_PATH}"
+            junit allowEmptyResults: true, testResults: "${env.EDITMODE_RESULT_PATH}"
+            junit allowEmptyResults: true, testResults: "${env.PLAYMODE_RESULT_PATH}"
         }
     }
 }
